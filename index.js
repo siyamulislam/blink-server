@@ -20,11 +20,14 @@ io.on("connection",(socket)=>{
         users[socket.id]=loggedInUser.name;
         socket.broadcast.emit('userJoined',{user:'Admin:',message:`${users[socket.id]} Has Joined` });
         socket.emit('welcome',{user:'Admin:',message:`welcome to the chat,${users[socket.id]}`})
-    })
-    socket.on('disconnect',({loggedInUser})=>{
+    });
+    socket.on('message',({message,id})=>{
+        io.emit('sendMessage',{user:users[id],message,id})
+    });
+    socket.on('disconnected',()=>{
         socket.broadcast.emit('userLeft',{user:'Admin:',message:`${users[socket.id]} Has Left` });
         console.log('user left');
-    })
+    });
    
    
 });  
